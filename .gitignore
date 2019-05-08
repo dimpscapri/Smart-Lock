@@ -1,0 +1,5 @@
+_tmp/
+.DS_Store
+lambda/custom/node_modules
+node_modules
+.ask/config

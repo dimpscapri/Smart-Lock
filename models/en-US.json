@@ -1,0 +1,159 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "smart lock",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "UnlockDoorIntent",
+                    "samples": [
+                        "Open the door",
+                        "Unlock the door",
+                        "Khul ja sim sim",
+                        "Please open the door"
+                    ]
+                },
+                {
+                    "name": "GenerateAndSendOTPIntent",
+                    "slots": [
+                        {
+                            "name": "id",
+                            "type": "AMAZON.NUMBER",
+                            "samples": [
+                                "{id}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "My ID is {id}",
+                        "Admin told me my id is {id}"
+                    ]
+                },
+                {
+                    "name": "ValidateOTPIntent",
+                    "slots": [
+                        {
+                            "name": "otp",
+                            "type": "AMAZON.NUMBER",
+                            "samples": [
+                                "{otp}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "One time password is {otp}",
+                        "As per twilio it is {otp}",
+                        "As per twilio OTP is {otp}"
+                    ]
+                },
+                {
+                    "name": "AddMovieIntent",
+                    "slots": [
+                        {
+                            "name": "MovieName",
+                            "type": "AMAZON.Movie",
+                            "samples": [
+                                "{MovieName}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "add {MovieName}",
+                        "add"
+                    ]
+                },
+                {
+                    "name": "GetMoviesIntent",
+                    "slots": [],
+                    "samples": [
+                        "get my movies"
+                    ]
+                },
+                {
+                    "name": "RemoveMovieIntent",
+                    "slots": [
+                        {
+                            "name": "MovieName",
+                            "type": "AMAZON.Movie",
+                            "samples": [
+                                "{MovieName}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "remove {MovieName}",
+                        "remove"
+                    ]
+                }
+            ],
+            "types": []
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "AddMovieIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "MovieName",
+                            "type": "AMAZON.Movie",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.932310416052.1004645578092"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "RemoveMovieIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "MovieName",
+                            "type": "AMAZON.Movie",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1034415917954.788060345760"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.932310416052.1004645578092",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Which movie would you like to add "
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1034415917954.788060345760",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Which movie would you like to remove "
+                    }
+                ]
+            }
+        ]
+    }
+}
