@@ -14,7 +14,7 @@ const LaunchRequestHandler = {
     return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
   handle(handlerInput) {
-    const speechText = 'Hello there. You can ask me to open the door.';
+    const speechText = 'Hello there. You can ask me to open or close the door.';
     const repromptText = 'What would you like to do? You can say HELP to get available options or you can say, Khul ja sim sim';
     console.log("I am working and called in launch request...")
     return handlerInput.responseBuilder
@@ -42,6 +42,47 @@ const UnlockDoorIntentHandler = {
     </speak>
     `;
     console.log("Unlock Door Intent is called in handle...");
+    return handlerInput.responseBuilder
+      .speak(speechText)
+      .reprompt(speechTextAlarm)
+      .getResponse();
+  }
+}
+
+const LockDoorIntentHandler = {
+  canHandle(handlerInput) {
+    console.log("Lock Door Intent is called in can handle...")
+    const request = handlerInput.requestEnvelope.request;
+    return request.type === 'IntentRequest' &&
+      request.intent.name === 'LockDoorIntent';
+  },
+  async handle(handlerInput) {
+    var speechText = 'Sure closing the door';
+    console.log("Lock Door Intent is called in handle...");
+    return mqttHelper.doorCommand('close')
+    .then((data) => {
+      if (data.success === 'door closed') {
+        console.log("MQTT message successfully delivered for closing door.")
+        console.log(handlerInput.responseBuilder);
+       
+        return handlerInput.responseBuilder
+          .speak(speechText)
+          .getResponse();
+      }
+      else {
+        speechText = 'Error while sending MQTT for closing the door'
+        return handlerInput.responseBuilder
+          .speak(speechText)
+          .getResponse();
+      }
+
+    })
+    .catch((err) => {
+      speechText = "Unable to send values to MQTT for closing door.";
+      return handlerInput.responseBuilder
+        .speak(speechText)
+        .getResponse();
+    })
     return handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(speechTextAlarm)
@@ -344,6 +385,7 @@ exports.handler = skillBuilder
   .addRequestHandlers(
     LaunchRequestHandler,
     UnlockDoorIntentHandler,
+    LockDoorIntentHandler,
     GenerateAndSendOTPIntentHandler,
     ValidateOTPIntentHandler,
     InProgressAddMovieIntentHandler,

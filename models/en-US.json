@@ -16,6 +16,14 @@
                     "samples": []
                 },
                 {
+                    "name": "LockDoorIntent",
+                    "samples": [
+                        "Close the door",
+                        "Please close the door",
+                        "band ho ja sim sim"
+                    ]
+                },
+                {
                     "name": "UnlockDoorIntent",
                     "samples": [
                         "Open the door",
