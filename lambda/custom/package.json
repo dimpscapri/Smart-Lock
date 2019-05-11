@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "ask-sdk": "^2.0.10",
-    "aws-sdk": "^2.451.0"
+    "aws-sdk": "^2.451.0",
+    "mqtt": "^2.15.8",
+    "twilio": "^3.30.3"
   }
 }

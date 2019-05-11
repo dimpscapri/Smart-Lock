@@ -5,6 +5,7 @@ const Alexa = require('ask-sdk');
 const dbHelper = require('./helpers/dbHelper');
 const twilioHelper = require('./helpers/helpertwilio');
 const helperdb = require('./helpers/helperdb');
+const mqttHelper = require('./helpers/mqtthelper');
 const GENERAL_REPROMPT = "What would you like to do?";
 const dynamoDBTableName = "dynamodb-starter";
 
@@ -106,22 +107,16 @@ const ValidateOTPIntentHandler = {
     console.log("*****************");
     console.log(id);
     console.log("*****************");
-    
+
     var otp = handlerInput.requestEnvelope.request.intent.slots.otp.value;
-    return helperdb.validateOTP(parseInt(id), parseInt(otp))
+    await helperdb.validateOTP(parseInt(id), parseInt(otp))
       .then((data) => {
         if (data.success === "success") {
-          console.log("Inside if....");
+          console.log("Inside if....OTP validation is successful");
           //Send OTP on whatsApp using Twilio
           //twilioHelper.sendOTPtoWhatsApp(otp, mobile, name); 
-          const speechText = '<speak>Opening door.  <emphasis>Informing the owner.</emphasis></speak>';
-
-          console.log("Validate OTP Intent is called in handle...");
-          return handlerInput.responseBuilder
-            .speak(speechText)
-            .getResponse();
         }
-        else{
+        else {
           const speechText = '<speak>OTP validation failed.</speak>';
 
           console.log("Inside else condition in handle...");
@@ -130,10 +125,40 @@ const ValidateOTPIntentHandler = {
             .getResponse();
 
         }
+        // console.log("just before the speech")
+        // return handlerInput.responseBuilder
+        //   .speak(speechText)
+        //   .getResponse();
 
       })
       .catch((err) => {
+        console.log("This is not working " + err)
         speechText = "Unable to fetch values from database.";
+        return handlerInput.responseBuilder
+          .speak(speechText)
+          .getResponse();
+      })
+    return mqttHelper.doorCommand('open')
+      .then((data) => {
+        if (data.success === 'door opened') {
+          console.log("MQTT message successfully delivered.")
+          console.log(handlerInput.responseBuilder);
+          var speechText = '<speak>Opening door.  <emphasis>Informing the owner.</emphasis></speak>';
+
+          return handlerInput.responseBuilder
+            .speak(speechText)
+            .getResponse();
+        }
+        else {
+          var speechText = 'Error while sending MQTT'
+          return handlerInput.responseBuilder
+            .speak(speechText)
+            .getResponse();
+        }
+
+      })
+      .catch((err) => {
+        speechText = "Unable to send values to MQTT.";
         return handlerInput.responseBuilder
           .speak(speechText)
           .getResponse();
